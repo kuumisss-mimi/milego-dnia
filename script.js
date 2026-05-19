@@ -1,0 +1,48 @@
+const Days = document.getElementById('days');
+const Hours = document.getElementById('hours');
+const Minutes = document.getElementById('minutes');
+const Seconds = document.getElementById('seconds');
+
+const targetDate = new Date("July 19 2026 00:00:00").getTime();
+
+function timer () {
+    const currentDate = new Date().getTime();
+    const distance = targetDate - currentDate;
+
+    const days = Math.floor(distance / 1000 / 60 / 60 / 24);
+    const hours = Math.floor(distance / 1000 / 60 / 60) % 24;
+    const minutes = Math.floor(distance / 1000 / 60) % 60;
+    const seconds = Math.floor(distance / 1000) % 60;
+
+    Days.innerHTML = days;
+    Hours.innerHTML = hours;
+    Minutes.innerHTML = minutes;
+    Seconds.innerHTML = seconds;
+
+    if(distance < 0){
+        Days.innerHTML = "00";
+        Hours.innerHTML = "00";
+        Minutes.innerHTML = "00";
+        Seconds.innerHTML = "00";
+    }
+}
+
+setInterval(timer, 1000)
+
+document.getElementById('btn-horoskop').addEventListener('click', () => {
+    const znak = document.getElementById('znak-select').value;
+    
+    if(!znak) {
+        document.getElementById('horoskop-tekst').innerText = 'Wybierz znak!';
+        return;
+    }
+
+    fetch(`https://freehoroscopeapi.com/api/v1/get-horoscope/daily?sign=${znak}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('horoskop-tekst').innerText = data.data.horoscope;
+        })
+        .catch(() => {
+            document.getElementById('horoskop-tekst').innerText = 'Błąd ładowania 😢';
+        });
+});
