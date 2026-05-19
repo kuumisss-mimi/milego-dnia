@@ -3,161 +3,89 @@ const Hours = document.getElementById('hours');
 const Minutes = document.getElementById('minutes');
 const Seconds = document.getElementById('seconds');
 
-const targetDate = new Date("July 19 2026 00:00:00").getTime();
+const targetDate = new Date("July 19, 2026 00:00:00").getTime();
 
-function timer () {
-    const currentDate = new Date().getTime();
-    const distance = targetDate - currentDate;
+function updateTimer() {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
 
-    const days = Math.floor(distance / 1000 / 60 / 60 / 24);
-    const hours = Math.floor(distance / 1000 / 60 / 60) % 24;
-    const minutes = Math.floor(distance / 1000 / 60) % 60;
-    const seconds = Math.floor(distance / 1000) % 60;
-
-    Days.innerHTML = days;
-    Hours.innerHTML = hours;
-    Minutes.innerHTML = minutes;
-    Seconds.innerHTML = seconds;
-
-    if(distance < 0){
-        Days.innerHTML = "00";
-        Hours.innerHTML = "00";
-        Minutes.innerHTML = "00";
-        Seconds.innerHTML = "00";
-    }
-}
-
-setInterval(timer, 1000)
-
-
-const znakiMap = {
-    "aries": "Baran",
-    "taurus": "Byk",
-    "gemini": "Bliźnięta",
-    "cancer": "Rak",
-    "leo": "Lew",
-    "virgo": "Panna",
-    "libra": "Waga",
-    "scorpio": "Skorpion",
-    "sagittarius": "Strzelec",
-    "capricorn": "Koziorożec",
-    "aquarius": "Wodnik",
-    "pisces": "Ryby"
-};
-
-document.getElementById('btn-horoskop').addEventListener('click', () => {
-    const select = document.getElementById('znak-select');
-    const wybranyZnak = select.value;
-    const wynik = document.getElementById('horoskop-tekst');
-
-    if (!wybranyZnak) {
-        wynik.innerHTML = `<span style="color: red;">Proszę wybrać znak zodiaku!</span>`;
+    if (distance < 0) {
+        Days.textContent = Hours.textContent = Minutes.textContent = Seconds.textContent = "00";
         return;
     }
 
-    wynik.innerHTML = `<em>Generuję horoskop na dziś...</em>`;
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    const horoskop = generujHoroskop(wybranyZnak);
+    Days.textContent = days < 10 ? "0" + days : days;
+    Hours.textContent = hours < 10 ? "0" + hours : hours;
+    Minutes.textContent = minutes < 10 ? "0" + minutes : minutes;
+    Seconds.textContent = seconds < 10 ? "0" + seconds : seconds;
+}
 
-    wynik.innerHTML = `
-        <strong>${horoskop.znak} — ${horoskop.data}</strong><br>
-        <small>${horoskop.dzien_tygodnia}</small><br><br>
-        <pre style="white-space: pre-wrap; font-family: inherit; background: #1e1e1e; padding: 20px; border-radius: 10px; color: #e0e0e0; line-height: 1.65;">
-${horoskop.tekst}
-        </pre>
-    `;
-});
+setInterval(updateTimer, 1000);
+updateTimer();
+
+const znakiMap = {
+    aries: "Baran", taurus: "Byk", gemini: "Bliźnięta", cancer: "Rak",
+    leo: "Lew", virgo: "Panna", libra: "Waga", scorpio: "Skorpion",
+    sagittarius: "Strzelec", capricorn: "Koziorożec", aquarius: "Wodnik", pisces: "Ryby"
+};
 
 function generujHoroskop(znakKod) {
     const today = new Date();
     const dataStr = today.toISOString().split('T')[0];
-
     const znakPl = znakiMap[znakKod] || "Baran";
 
     const seed = dataStr + znakKod;
     let hash = 0;
     for (let i = 0; i < seed.length; i++) {
         hash = (hash << 5) - hash + seed.charCodeAt(i);
-        hash = hash & hash;
+        hash |= 0;
     }
 
-    const intro = [
-        `Drogi ${znakPl}, dzisiejsza energia planet sprzyja...`,
-        `${znakPl}, gwiazdy wskazują na...`,
-        `Dla ${znakPl} dzisiejszy dzień będzie...`
-    ];
-
-    const sekcje = [
-        "W miłości i relacjach",
-        "W pracy i finansach",
-        "Zdrowie i samopoczucie",
-        "Rada dnia"
-    ];
-
-    const teksty = {
-        "aries": ["będziesz pełen energii i gotowy do działania", "czas na odważne decyzje", "unikaj konfliktów", "nowe możliwości się pojawią"],
-        "taurus": ["stabilizacja i przyjemności", "dbaj o finanse", "cierpliwość popłaca", "miłe spotkania"],
-    };
-
-    const love = [
-        "W relacjach panuje dziś dobra atmosfera. Szczera rozmowa może zbliżyć Was do siebie.",
-        "Single mogą liczyć na interesujące spotkanie lub wiadomość, która poprawi humor.",
-        "W związkach czas na kompromis i wzajemne zrozumienie.",
-        "Emocje będą dziś intensywne – kontroluj impulsy."
-    ];
-
-    const praca = [
-        "W pracy czeka Cię produktywny dzień. Dobry moment na realizację planów.",
-        "Możesz otrzymać ważną informację lub propozycję.",
-        "Skup się na szczegółach, unikaj pośpiechu.",
-        "Twoja kreatywność zostanie doceniona."
-    ];
-
-    const zdrowie = [
-        "Dbaj o regenerację i sen. Organizm potrzebuje dziś więcej uwagi.",
-        "Dobry dzień na ruch na świeżym powietrzu.",
-        "Unikaj nadmiernego stresu i kofeiny.",
-        "Czujesz przypływ energii – wykorzystaj to."
-    ];
-
-    const rada = [
-        "Zaufaj swojej intuicji – dziś będzie Twoim najlepszym przewodnikiem.",
-        "Małe kroki prowadzą do dużych zmian.",
-        "Bądź otwarty na nowe perspektywy.",
-        "Spokój i opanowanie to Twój największy atut dzisiaj."
-    ];
+    const love = ["W relacjach panuje dziś ciepła atmosfera ❤️", "Single mogą liczyć na miłe spotkanie ✨", "Czas na szczerą rozmowę w związku", "Emocje silne – zachowaj równowagę"];
+    const praca = ["Produktywny dzień, Twoje pomysły będą docenione 💼", "Możesz dostać ważną wiadomość", "Kreatywność przyniesie efekty", "Dobry dzień na realizację planów"];
+    const zdrowie = ["Dbaj o regenerację 🌿", "Ruch na świeżym powietrzu dobrze Ci zrobi", "Organizm potrzebuje uwagi", "Przypływ energii – wykorzystaj mądrze"];
+    const rada = ["Zaufaj intuicji", "Małe kroki dają duże rezultaty", "Bądź otwarty na nowe rzeczy", "Spokój to Twój największy atut"];
 
     const r = Math.abs(hash);
-    const t1 = r % love.length;
-    const t2 = (r * 7) % praca.length;
-    const t3 = (r * 13) % zdrowie.length;
-    const t4 = (r * 37) % rada.length;
-
-    const tekst = `
-${znakPl} — ${dataStr}
-
-${sekcje[0]}: ${love[t1]}
-
-${sekcje[1]}: ${praca[t2]}
-
-${sekcje[2]}: ${zdrowie[t3]}
-
-${sekcje[3]}: ${rada[t4]}
-    `.trim();
+    
+    const tekstHTML = `
+        <div class="horoskop-sekcja"><strong>❤️ W miłości:</strong><br>${love[r % love.length]}</div>
+        <div class="horoskop-sekcja"><strong>💼 W pracy:</strong><br>${praca[(r*7)%praca.length]}</div>
+        <div class="horoskop-sekcja"><strong>🌿 Zdrowie:</strong><br>${zdrowie[(r*13)%zdrowie.length]}</div>
+        <div class="horoskop-sekcja"><strong>⭐ Rada dnia:</strong><br>${rada[(r*37)%rada.length]}</div>
+    `;
 
     return {
         znak: znakPl,
         data: dataStr,
-        dzien_tygodnia: new Intl.DateTimeFormat('pl-PL', { weekday: 'long' }).format(today),
-        tekst: tekst
+        dzien_tygodnia: today.toLocaleDateString('pl-PL', { weekday: 'long' }),
+        tekst: tekstHTML
     };
 }
 
-document.getElementById('znak-select').addEventListener('change', () => {
-    document.getElementById('btn-horoskop').click();
-});
+const select = document.getElementById('znak-select');
+const wynik = document.getElementById('horoskop-tekst');
+
+function pokazHoroskop() {
+    const znak = select.value;
+    if (!znak) return;
+    
+    const h = generujHoroskop(znak);
+    wynik.innerHTML = `
+        <strong style="font-size:1.6em;">${h.znak} — ${h.data}</strong><br>
+        <small>${h.dzien_tygodnia}</small><br><br>
+        ${h.tekst}
+    `;
+}
+
+select.addEventListener('change', pokazHoroskop);
 
 window.addEventListener('load', () => {
-    document.getElementById('znak-select').value = 'aries';
-    document.getElementById('btn-horoskop').click();
+    select.value = 'sagittarius';
+    pokazHoroskop();
 });
