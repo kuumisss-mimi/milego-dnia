@@ -58,6 +58,13 @@ body {
 
 .time {
     text-align: center;
+    width: auto;
+}
+
+.time > p {
+    text-align: center;
+    justify-content: center;
+    width: auto;
 }
 
 .horoskop {
