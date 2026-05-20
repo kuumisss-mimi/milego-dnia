@@ -49,6 +49,8 @@ body {
 
 .timebox {
     display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 90px;
 }
 
@@ -62,4 +64,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center ;
+}
+
+#znak-select {
+    cursor: pointer;
 }
