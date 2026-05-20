@@ -48,8 +48,10 @@ body {
 }
 
 .timebox {
+    width: auto;
     display: flex;
     justify-content: center;
+    display: flex;
     align-items: center;
     gap: 90px;
 }
