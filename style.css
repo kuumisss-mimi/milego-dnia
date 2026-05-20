@@ -23,11 +23,12 @@ body {
 }
 
 .timer {
+    box-sizing: border-box;
     border: 2px solid white;
     border-radius: 5px;
     border-width: auto;
     height: auto;
-    width: auto;
+    width: 100%;
     padding-top: 15px;
     padding-bottom: 15px;
     display: flex;
@@ -51,10 +52,8 @@ body {
 .timebox {
     width: auto;
     display: flex;
-    display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
     display: flex;
     align-items: center;
     gap: 90px;
