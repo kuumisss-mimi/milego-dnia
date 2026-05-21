@@ -52,11 +52,19 @@ function initMiniPaint() {
     let color = '#000000';
     let size = 8;
 
-    canvas.width = 780;
-    canvas.height = 480;
+    function resizeCanvas() {
+        const containerWidth = Math.min(780, window.innerWidth - 40);
+        canvas.width = containerWidth;
+        canvas.height = Math.floor(containerWidth * 0.62);
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
+    ctx.strokeStyle = color;
+    ctx.lineWidth = size;
 
     function getPosition(e) {
         const rect = canvas.getBoundingClientRect();
@@ -80,8 +88,6 @@ function initMiniPaint() {
         const pos = getPosition(e);
         ctx.beginPath();
         ctx.moveTo(pos.x, pos.y);
-        ctx.strokeStyle = color;
-        ctx.lineWidth = size;
         e.preventDefault();
     }
 
@@ -107,21 +113,14 @@ function initMiniPaint() {
     canvas.addEventListener('touchend', stopPainting);
     canvas.addEventListener('touchcancel', stopPainting);
 
-    document.getElementById('color-picker')?.addEventListener('input', e => {
-        color = e.target.value;
-    });
-
+    document.getElementById('color-picker')?.addEventListener('input', e => color = e.target.value);
     document.getElementById('brush-size')?.addEventListener('input', e => {
         size = parseInt(e.target.value);
+        ctx.lineWidth = size;
     });
 
-    document.getElementById('clear-btn')?.addEventListener('click', () => ctx.clearRect(0, 0, canvas.width, canvas.height));
-    
-    document.getElementById('download-btn')?.addEventListener('click', () => {
-        const link = document.createElement('a');
-        link.download = `paint-${new Date().toISOString().slice(0,10)}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
+    document.getElementById('clear-btn')?.addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
 }
 
