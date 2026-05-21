@@ -177,6 +177,7 @@ body {
     touch-action: none;
     max-width: 100%;
     height: auto;
+    display: block; 
 }
 
 .paint-przyciski{
