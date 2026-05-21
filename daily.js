@@ -52,34 +52,62 @@ function initMiniPaint() {
     let color = '#000000';
     let size = 8;
 
-    canvas.width = 820;
-    canvas.height = 520;
+    canvas.width = 780;
+    canvas.height = 480;
 
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.strokeStyle = color;
     ctx.lineWidth = size;
 
-    function draw(e) {
-        if (!painting) return;
+    function getPosition(e) {
         const rect = canvas.getBoundingClientRect();
-        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        let clientX, clientY;
+
+        if (e.touches) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        } else {
+            clientX = e.clientX;
+            clientY = e.clientY;
+        }
+
+        return {
+            x: clientX - rect.left,
+            y: clientY - rect.top
+        };
     }
 
-    canvas.addEventListener('mousedown', (e) => {
+    function startPainting(e) {
         painting = true;
-        draw(e);
-    });
+        const pos = getPosition(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+        e.preventDefault();
+    }
 
-    canvas.addEventListener('mouseup', () => {
+    function draw(e) {
+        if (!painting) return;
+        const pos = getPosition(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        e.preventDefault();
+    }
+
+    function stopPainting() {
         painting = false;
         ctx.beginPath();
-    });
+    }
 
+    canvas.addEventListener('mousedown', startPainting);
     canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopPainting);
+    canvas.addEventListener('mouseleave', stopPainting);
+
+    canvas.addEventListener('touchstart', startPainting);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stopPainting);
+    canvas.addEventListener('touchcancel', stopPainting);
 
     document.getElementById('color-picker')?.addEventListener('input', (e) => {
         color = e.target.value;
