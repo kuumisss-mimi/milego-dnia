@@ -62,7 +62,30 @@
         </div>
     </div>
 
+    <div class="fakt-div">
+            <p>Fakt</p>
+            <div id="fakt-dnia"></div>
+    </div>
+
+    <div class="zdjecie-dnia">
+        <p>Zdjęcie dnia</p>
+        <img id="zdjecie-dnia" alt="Zdjęcia dnia" src="" srcset="" style="max-width:500px; border-radius:8px;">
+    </div>
+
+    <div class="paint">
+        <h2 class="paint-title">Mini Paint</h2>
+        <canvas id="paint-canvas" style="border:1px solid #ccc; background:#fff;"></canvas>
+
+        <div class="paint-przyciski">
+            <label>Kolor: <input type="color" id="color-picker" value="#000000"></label>
+            <label>Grubość: <input type="range" id="brush-size" min="1" max="50" value="8"></label>
+            <button id="clear-btn">Wyczyść</button>
+            <button id="download-btn">Pobierz obrazek</button>
+        </div>
+    </div>
+
     <script src="script.js"></script>
+    <script src="daily.js"></script>
 </body>
 
 </html>
