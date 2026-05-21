@@ -57,24 +57,21 @@ function initMiniPaint() {
 
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.strokeStyle = color;
-    ctx.lineWidth = size;
 
     function getPosition(e) {
         const rect = canvas.getBoundingClientRect();
-        let clientX, clientY;
+        let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        let clientY = e.clientY || (e.touches && e.touches[0].clientY);
 
-        if (e.touches) {
-            clientX = e.touches[0].clientX;
-            clientY = e.touches[0].clientY;
-        } else {
-            clientX = e.clientX;
-            clientY = e.clientY;
-        }
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+
+        let x = (clientX - rect.left) * scaleX;
+        let y = (clientY - rect.top) * scaleY;
 
         return {
-            x: clientX - rect.left,
-            y: clientY - rect.top
+            x: Math.max(0, Math.min(canvas.width, x)),
+            y: Math.max(0, Math.min(canvas.height, y))
         };
     }
 
@@ -83,6 +80,8 @@ function initMiniPaint() {
         const pos = getPosition(e);
         ctx.beginPath();
         ctx.moveTo(pos.x, pos.y);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = size;
         e.preventDefault();
     }
 
@@ -96,7 +95,6 @@ function initMiniPaint() {
 
     function stopPainting() {
         painting = false;
-        ctx.beginPath();
     }
 
     canvas.addEventListener('mousedown', startPainting);
@@ -104,29 +102,25 @@ function initMiniPaint() {
     canvas.addEventListener('mouseup', stopPainting);
     canvas.addEventListener('mouseleave', stopPainting);
 
-    canvas.addEventListener('touchstart', startPainting);
-    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchstart', startPainting, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
     canvas.addEventListener('touchend', stopPainting);
     canvas.addEventListener('touchcancel', stopPainting);
 
-    document.getElementById('color-picker')?.addEventListener('input', (e) => {
+    document.getElementById('color-picker')?.addEventListener('input', e => {
         color = e.target.value;
-        ctx.strokeStyle = color;
     });
 
-    document.getElementById('brush-size')?.addEventListener('input', (e) => {
+    document.getElementById('brush-size')?.addEventListener('input', e => {
         size = parseInt(e.target.value);
-        ctx.lineWidth = size;
     });
 
-    document.getElementById('clear-btn')?.addEventListener('click', () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    });
-
+    document.getElementById('clear-btn')?.addEventListener('click', () => ctx.clearRect(0, 0, canvas.width, canvas.height));
+    
     document.getElementById('download-btn')?.addEventListener('click', () => {
         const link = document.createElement('a');
-        link.download = `mini-paint-${new Date().toISOString().slice(0,10)}.png`;
-        link.href = canvas.toDataURL('image/png');
+        link.download = `paint-${new Date().toISOString().slice(0,10)}.png`;
+        link.href = canvas.toDataURL();
         link.click();
     });
 }
