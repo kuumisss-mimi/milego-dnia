@@ -20,76 +20,11 @@
 </head>
 
 <body>
-    
-    <nav class="nav">Codziennie coś nowego!</nav>
 
-    <div class="timer">
-        <h1>Do wyjścia</h1>
-        <div class="timebox">
-            <div class="time">
-                <h2 id="days">00</h2>
-                <p>Dni</p>
-            </div>
-            <div class="time">
-                <h2 id="hours">00</h2>
-                <p>Godziny</p>
-            </div>
-            <div class="time">
-                <h2 id="minutes">00</h2>
-                <p>Minuty</p>
-            </div>
-            <div class="time">
-                <h2 id="seconds">00</h2>
-                <p>Sekundy</p>
-            </div>
-        </div>
+    <div class="wolnosc">
+        <h1>WOLNOSC!</h1>
     </div>
 
-    <div class="main">
-        <div class="horoskop">
-            <select id="znak-select">
-                <option value="">-- Wybierz znak --</option>
-                <option value="aries">Baran ♈</option>
-                <option value="taurus">Byk ♉</option>
-                <option value="gemini">Bliźnięta ♊</option>
-                <option value="cancer">Rak ♋</option>
-                <option value="leo">Lew ♌</option>
-                <option value="virgo">Panna ♍</option>
-                <option value="libra">Waga ♎</option>
-                <option value="scorpio">Skorpion ♏</option>
-                <option value="sagittarius">Strzelec ♐</option>
-                <option value="capricorn">Koziorożec ♑</option>
-                <option value="aquarius">Wodnik ♒</option>
-                <option value="pisces">Ryby ♓</option>
-            </select>
-            <p id="horoskop-tekst"></p>
-        </div>
-    </div>
-
-    <div class="fakt-div">
-            <p>Fakt</p>
-            <div id="fakt-dnia"></div>
-    </div>
-
-    <div class="zdjecie-dnia">
-        <p>Zdjęcie dnia</p>
-        <img id="zdjecie-dnia" alt="Zdjęcia dnia" src="" srcset="" style="max-width:500px; border-radius:8px;">
-    </div>
-
-    <div class="paint">
-        <h2 class="paint-title">Mini Paint</h2>
-        <canvas id="paint-canvas" style="border:1px solid #ccc; background:#fff;"></canvas>
-
-        <div class="paint-przyciski">
-            <label>Kolor: <input type="color" id="color-picker" value="#000000"></label>
-            <label>Grubość: <input type="range" id="brush-size" min="1" max="50" value="8"></label>
-            <button id="clear-btn">Wyczyść</button>
-            <button id="download-btn">Pobierz obrazek</button>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
-    <script src="daily.js"></script>
 </body>
 
 </html>
